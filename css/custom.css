@@ -1,0 +1,43 @@
+/* Убираем лишние отступы */
+* {
+  padding: 0;
+  margin: 0;
+}
+
+/* style table */
+table, td {
+  border: 1px solid black;
+}
+table {
+  position: relative;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+td {
+  width: 100px;
+}
+.textAlign {
+  text-align: center;
+}
+/* end style table */
+
+/* style selectors */
+.groupSelector {
+  margin-top: 20px;
+  text-align: center;
+}
+.selects {
+  display: inline;
+}
+.select {
+  width: 10%;
+}
+/* end style selector */
+
+/* button start! */
+.button {
+  margin-top: 20px;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
