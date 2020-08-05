@@ -46,6 +46,61 @@ function getSelect(selects){
 
 }
 
+
+function getTableTr(groupSelects) {
+
+  const table = document.querySelector('table');
+  const trs = table.querySelectorAll('tr:not(.textAlign)');
+
+  let arr = [];
+  let count = 0;
+
+  for(let tr of trs){
+    let indTr = newFunction(tr, groupSelects);
+    let checkTr = chekDoubleIndex(indTr, arr, count);
+    // console.log(checkTr);
+
+    // if (checkTr == false) {
+    //   if
+    //   arr[1] = [];
+    //   arr[1].push(indTr);
+    // }
+    // arr[count] = [];
+    // if(checkTr == false){
+    //   // console.log(checkTr);
+    //   arr[count].push(indTr);
+    //   count++;
+    // }
+  }
+  console.log(arr);
+}
+// -------------------------------------------------
+// ПОЛУЧЕНИЕ ВЫБРАННЫХ КРИТЕРИЕВ С КАЖДОЙ СТРОКИ
+function newFunction(tr, groupSelects) {
+
+  let tds = tr.querySelectorAll('td');
+
+  let result = [];
+  // let arr = [];
+
+  // arr[count] = [];
+  for (let td of tds) {
+    for (let sel of groupSelects['Критерий']){
+      if (sel == td.classList.item(0)){
+        result.push(td);
+      }
+    }
+
+  }
+  // count++;
+
+  return result;
+
+}
+// ----------------------------------------------------
+
+// --------------------------------------------------------
+// ПОДПИСЫВАЕМ КАЖДЫЙ TD ИМЕНЕМ СТОЛБЦА
 function addClassTd(trs){
 
   let tr = document.querySelectorAll('tr:not(.textAlign)');
@@ -71,53 +126,61 @@ function addClassTd(trs){
 
   }
 }
+// --------------------------------------------------------------
 
-function getTableTr(groupSelects) {
+// ----------------------------------------------------------
+// ФУНКЦИЯ ПРОВЕРКИ НА ПОВТОРЕНИЯ ИНДЕКСОВ(КРИТЕРИЕВ)
+function chekDoubleIndex(indTr, arr, count){
+  // console.log(arr);
+  if (arr.length == 0){
+    arr[count] = [];
+    arr[count].push(indTr);
+    // arr[1] = [];
+    // arr[1].push(indTr);
+    // arr[2] = [];
+    // arr[2].push(indTr);
+    // continue;
+  } else {
 
-  const table = document.querySelector('table');
-  const trs = table.querySelectorAll('tr:not(.textAlign)');
+    console.log(arr);
+    for (let elem of arr) {
+      // console.log(elem);
+      for (let ele of elem){
+        let countTrue = 0;
+        // let countFalse = 0;
+        for (let i = 0; i < ele.length; i++){
 
-  // console.log(trs);
-  // console.log(groupSelects);
+          console.log(ele);
+          if (ele[i].innerHTML == indTr[i].innerHTML) {
+            countTrue++;
+          }
+          // if (ele[i].innerHTML != indTr[i].innerHTML) {
+          //   countFalse++;
+          // }
 
-  let arr = [];
 
-  for(let tr of trs){
-    // console.log(tr);
-    let str = newFunction(tr, groupSelects, arr);
-    console.log(str);
-  }
-  // for(let elem in groupSelects){
-  //   console.log(groupSelects[elem]);
-  // }
+          // if (countTrue == ele.length) {
+          //   console.log(ele[i].innerHTML == indTr[i].innerHTML);
+          // }
 
-}
+        }
+        // console.log(countFalse, ele.length);
+        // console.log(countTrue == ele.length);
 
-function newFunction(tr, groupSelects, arr) {
-  // console.log(tr, groupSelects, arr);
+        if (countTrue == ele.length) {
+          arr[count].push(indTr);
+          break;
+        }
+        // console.log(countFalse);
+        // if (countFalse == ele.length) {
+        //   arr[count].push(indTr);
+        //   break;
+        // }
 
-  // console.log(tr);
-  // console.log(groupSelects['Критерий']);
 
-  let tds = tr.querySelectorAll('td');
-  // console.log(groupSelects['Критерий'].length);
-
-  // console.log(tds);
-
-  let count = 0;
-
-  arr[count] = [];
-  for (let td of tds) {
-    for (let sel of groupSelects['Критерий']){
-      if (sel == td.classList.item(0)){
-        arr[count].push(td);
       }
     }
 
   }
-  count++;
-
-  return arr;
-  // console.log(arr);
-
 }
+// --------------------------------------------------------------
