@@ -85,6 +85,7 @@ function getTableTr(groupSelects) {
   for(let tr of trs){
     // console.log(tr);
     let str = newFunction(tr, groupSelects, arr);
+    console.log(str);
   }
   // for(let elem in groupSelects){
   //   console.log(groupSelects[elem]);
@@ -99,19 +100,24 @@ function newFunction(tr, groupSelects, arr) {
   // console.log(groupSelects['Критерий']);
 
   let tds = tr.querySelectorAll('td');
+  // console.log(groupSelects['Критерий'].length);
 
-  for(let td of tds){
+  // console.log(tds);
 
-    for(let select of groupSelects['Критерий']){
+  let count = 0;
 
-      // console.log(td.classList.item(0));
-      if (td.classList.item(0) === select) {
-
-        console.log(td);
-
+  arr[count] = [];
+  for (let td of tds) {
+    for (let sel of groupSelects['Критерий']){
+      if (sel == td.classList.item(0)){
+        arr[count].push(td);
       }
-
     }
 
   }
+  count++;
+
+  return arr;
+  // console.log(arr);
+
 }
