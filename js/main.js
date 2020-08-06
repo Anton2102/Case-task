@@ -15,9 +15,9 @@ buttonStart.addEventListener('click', () => {
 
 });
 
+// ----------------------------------------------
 // Получаем группы выбранных селектов
 function getSelect(selects){
-
   // делим на логические группы
   let groupSelects = {
     '---': [],
@@ -29,7 +29,7 @@ function getSelect(selects){
   };
 
   // обходим все селекты, при совпадении
-  // при совпадении значений, заносим их в логическую группу
+  // значений, заносим их в логическую группу
   for(let select of selects){
 
     for(let optionSelected in groupSelects){
@@ -42,50 +42,69 @@ function getSelect(selects){
 
   }
 
+  // Переходим у функции отбора критериев
   getTableTr(groupSelects);
 
 }
+// ----------------------------------------------------------
 
-
+// ---------------------------------------------------------
+// ГРУППА РАЗБОРА ИНДЕКСОВ РЕЗУЛЬТИРУЮЩЕЙ ТАБЛИЦЫ
 function getTableTr(groupSelects) {
 
+  // получаем все строки по мимо заголовка
   const table = document.querySelector('table');
   const trs = table.querySelectorAll('tr:not(.textAlign)');
 
+  // массив и счетчик для группы "критерии"
   let arr = [];
+  let infoPathTr = [];
+  let countInfoPathTr = 0;
   let count = 0;
 
+  // обходим строки
   for(let tr of trs){
-    let indTr = newFunction(tr, groupSelects);
-    let check = chekDoubleIndex(indTr, arr, count);
-    // console.log(check == undefined);
+    // каждому тд присвоим своё логическое имя их селекта
+    let indTr = getTd(tr, groupSelects, 'Критерий');
+
+    // функция для разбора по группам
+    // если функция прибрала строку на место возращется true
+    let check = chekDoubleIndex(indTr, arr, count, infoPathTr, countInfoPathTr);
+
+    // если нет, то запускаем повторную обработку
     if (check == undefined){
       count++;
-      let check2 = chekDoubleIndex(indTr, arr, count);
+      let check2 = chekDoubleIndex(indTr, arr, count, infoPathTr, countInfoPathTr);
     }
+    countInfoPathTr++;
   }
-  console.log(arr);
+  // через консоль ниже можно посмотреть результат обработки
+   // --->  console.log(arr); <---
+   getOtherTd(infoPathTr, groupSelects);
+   console.log(arr, infoPathTr);
 }
+
 // -------------------------------------------------
 // ПОЛУЧЕНИЕ ВЫБРАННЫХ КРИТЕРИЕВ С КАЖДОЙ СТРОКИ
-function newFunction(tr, groupSelects) {
+function getTd(tr, groupSelects, name) {
 
+  // обходим все td из строки
   let tds = tr.querySelectorAll('td');
 
   let result = [];
-  // let arr = [];
 
-  // arr[count] = [];
+  // если class td совпадает с выбранным селектом
+  // то заносим его в новый масси
   for (let td of tds) {
-    for (let sel of groupSelects['Критерий']){
+    for (let sel of groupSelects[name]){
       if (sel == td.classList.item(0)){
         result.push(td);
       }
     }
 
   }
-  // count++;
 
+  // возращем получившийся массив
   return result;
 
 }
@@ -122,61 +141,59 @@ function addClassTd(trs){
 
 // ----------------------------------------------------------
 // ФУНКЦИЯ ПРОВЕРКИ НА ПОВТОРЕНИЯ ИНДЕКСОВ(КРИТЕРИЕВ)
-function chekDoubleIndex(indTr, arr, count){
+function chekDoubleIndex(indTr, arr, count, infoPathTr, countInfoPathTr){
   let countTRue = 0;
-  // let countTFalse = 0;
-  // console.log(indTr, arr, count)
+
   if (!(arr.hasOwnProperty(count))) {
     arr[count] = [];
-    arr[count].push(indTr);
-    return true;
-    // arr['0'] = [];
-    // arr[1] = [];
-    // arr[1].push(indTr);
+    infoPathTr[count] = []
 
-    // arr[2] = [];
-    // arr[2].push(indTr);
+    arr[count].push(indTr);
+    infoPathTr[count].push(countInfoPathTr);
+    return true;
 
   } else {
 
-    console.log(arr.length);
-    // for(let i = 0; i < arr.length; i++){
-    //   console.log(arr[i][0]);
-    //   console.log(indTr);
-    // }
-    // let countTRue = 0;
-    // let countTFalse = 0;
-
-    // console.log(arr[1][0]);
-    console.log(indTr);
-
-
-
-    console.log(arr[count][0]);
     for(let i = 0; i < indTr.length; i++){
-      console.log(arr[count][0][i].innerHTML, indTr[i].innerHTML)
+
       if(arr[count][0][i].innerHTML == indTr[i].innerHTML){
         countTRue++;
       }
-      // else {
-      //   countTFalse++;
-      //   count++;
-      //   arr[count] = [];
-      // }
+
     }
+
     if (countTRue == indTr.length){
       arr[count].push(indTr);
+      infoPathTr[count].push(countInfoPathTr);
       return true;
     }
 
   }
-  // console.log('Конец обхода!');
-  // if (countTFalse > 0){
-  //   console.log(indTr);
-  //   // count++;
-  //   // arr[count] = [];
-  //   arr[count].push(indTr);
-  // }
 
 }
 // --------------------------------------------------------------
+
+// ------------------------------------------------------------------
+function getOtherTd(infoPathTr, groupSelects) {
+  const table = document.querySelector('table');
+  const trs = table.querySelectorAll('tr:not(.textAlign)');
+
+  let count = 0;
+  let arrOtherFile = [];
+  // console.log(infoPathTr);
+
+  for(let i = 0; i < infoPathTr.length; i++){
+    arrOtherFile[i] = [];
+    for (let j = 0; j < infoPathTr[i].length; j++){
+      arrOtherFile[i][j] = [];
+      arrOtherFile[i][j].push(getTd(trs[count], groupSelects, 'Сумма'));
+      count++;
+    }
+  }
+  // for (let tr of trs){
+  //   let indTr = getTd(tr, groupSelects, 'Сумма');
+  //   // for(let elem)
+  //   // console.log(indTr);
+  // }
+  console.log(arrOtherFile);
+}
