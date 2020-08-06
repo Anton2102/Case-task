@@ -57,20 +57,12 @@ function getTableTr(groupSelects) {
 
   for(let tr of trs){
     let indTr = newFunction(tr, groupSelects);
-    let checkTr = chekDoubleIndex(indTr, arr, count);
-    // console.log(checkTr);
-
-    // if (checkTr == false) {
-    //   if
-    //   arr[1] = [];
-    //   arr[1].push(indTr);
-    // }
-    // arr[count] = [];
-    // if(checkTr == false){
-    //   // console.log(checkTr);
-    //   arr[count].push(indTr);
-    //   count++;
-    // }
+    let check = chekDoubleIndex(indTr, arr, count);
+    // console.log(check == undefined);
+    if (check == undefined){
+      count++;
+      let check2 = chekDoubleIndex(indTr, arr, count);
+    }
   }
   console.log(arr);
 }
@@ -131,56 +123,60 @@ function addClassTd(trs){
 // ----------------------------------------------------------
 // ФУНКЦИЯ ПРОВЕРКИ НА ПОВТОРЕНИЯ ИНДЕКСОВ(КРИТЕРИЕВ)
 function chekDoubleIndex(indTr, arr, count){
-  // console.log(arr);
-  if (arr.length == 0){
+  let countTRue = 0;
+  // let countTFalse = 0;
+  // console.log(indTr, arr, count)
+  if (!(arr.hasOwnProperty(count))) {
     arr[count] = [];
     arr[count].push(indTr);
+    return true;
+    // arr['0'] = [];
     // arr[1] = [];
     // arr[1].push(indTr);
+
     // arr[2] = [];
     // arr[2].push(indTr);
-    // continue;
+
   } else {
 
-    console.log(arr);
-    for (let elem of arr) {
-      // console.log(elem);
-      for (let ele of elem){
-        let countTrue = 0;
-        // let countFalse = 0;
-        for (let i = 0; i < ele.length; i++){
+    console.log(arr.length);
+    // for(let i = 0; i < arr.length; i++){
+    //   console.log(arr[i][0]);
+    //   console.log(indTr);
+    // }
+    // let countTRue = 0;
+    // let countTFalse = 0;
 
-          console.log(ele);
-          if (ele[i].innerHTML == indTr[i].innerHTML) {
-            countTrue++;
-          }
-          // if (ele[i].innerHTML != indTr[i].innerHTML) {
-          //   countFalse++;
-          // }
+    // console.log(arr[1][0]);
+    console.log(indTr);
 
 
-          // if (countTrue == ele.length) {
-          //   console.log(ele[i].innerHTML == indTr[i].innerHTML);
-          // }
 
-        }
-        // console.log(countFalse, ele.length);
-        // console.log(countTrue == ele.length);
-
-        if (countTrue == ele.length) {
-          arr[count].push(indTr);
-          break;
-        }
-        // console.log(countFalse);
-        // if (countFalse == ele.length) {
-        //   arr[count].push(indTr);
-        //   break;
-        // }
-
-
+    console.log(arr[count][0]);
+    for(let i = 0; i < indTr.length; i++){
+      console.log(arr[count][0][i].innerHTML, indTr[i].innerHTML)
+      if(arr[count][0][i].innerHTML == indTr[i].innerHTML){
+        countTRue++;
       }
+      // else {
+      //   countTFalse++;
+      //   count++;
+      //   arr[count] = [];
+      // }
+    }
+    if (countTRue == indTr.length){
+      arr[count].push(indTr);
+      return true;
     }
 
   }
+  // console.log('Конец обхода!');
+  // if (countTFalse > 0){
+  //   console.log(indTr);
+  //   // count++;
+  //   // arr[count] = [];
+  //   arr[count].push(indTr);
+  // }
+
 }
 // --------------------------------------------------------------
