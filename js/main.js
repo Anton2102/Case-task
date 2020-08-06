@@ -41,9 +41,14 @@ function getSelect(selects){
     }
 
   }
+  if (groupSelects['---'].length == 5) {
+    return 0;
+  } else {
 
-  // Переходим у функции отбора критериев
-  getTableTr(groupSelects);
+    // Переходим у функции отбора критериев
+    getTableTr(groupSelects);
+
+  }
 
 }
 // ----------------------------------------------------------
@@ -79,9 +84,20 @@ function getTableTr(groupSelects) {
     countInfoPathTr++;
   }
   // через консоль ниже можно посмотреть результат обработки
-   // --->  console.log(arr); <---
-   getOtherTd(infoPathTr, groupSelects);
-   console.log(arr, infoPathTr);
+  // --->  console.log(arr); <---
+  let arrResultGroup = [];
+  // console.log(groupSelects);
+  for(let elem in groupSelects) {
+    if (elem != '---'){
+      if(groupSelects[elem] != ''){
+
+        let resultGroup = getOtherTd(infoPathTr, groupSelects, elem);
+        arrResultGroup.push(resultGroup);
+
+      }
+    }
+  }
+  console.log(arrResultGroup);
 }
 
 // -------------------------------------------------
@@ -174,7 +190,8 @@ function chekDoubleIndex(indTr, arr, count, infoPathTr, countInfoPathTr){
 // --------------------------------------------------------------
 
 // ------------------------------------------------------------------
-function getOtherTd(infoPathTr, groupSelects) {
+function getOtherTd(infoPathTr, groupSelects, elem) {
+  // console.log(elem);
   const table = document.querySelector('table');
   const trs = table.querySelectorAll('tr:not(.textAlign)');
 
@@ -186,7 +203,7 @@ function getOtherTd(infoPathTr, groupSelects) {
     arrOtherFile[i] = [];
     for (let j = 0; j < infoPathTr[i].length; j++){
       arrOtherFile[i][j] = [];
-      arrOtherFile[i][j].push(getTd(trs[count], groupSelects, 'Сумма'));
+      arrOtherFile[i][j].push(getTd(trs[count], groupSelects, elem));
       count++;
     }
   }
@@ -195,5 +212,104 @@ function getOtherTd(infoPathTr, groupSelects) {
   //   // for(let elem)
   //   // console.log(indTr);
   // }
-  console.log(arrOtherFile);
+  let result = clearGroup(arrOtherFile, elem);
+  return result;
+  // console.log(result);
+}
+
+function clearGroup(arrOtherFile, name) {
+  // console.log(name);
+  let arr = [];
+
+// - - - - - СУММА - - - - -
+  if (name == 'Сумма'){
+
+    for(let elem of arrOtherFile){
+      let current = 0;
+
+      for(let ele of elem){
+        // console.log(ele[0][0].innerHTML);
+        current += Number(ele[0][0].innerHTML);
+      }
+
+      arr.push(current);
+    }
+
+    // - - - - - МАКС. - - - - -
+  } else if (name == 'Макс.') {
+
+    for(let elem of arrOtherFile){
+      let current;
+
+      for(let ele of elem){
+        if (current == undefined){
+          current = Number(ele[0][0].innerHTML);
+        } else {
+          if (Number(ele[0][0].innerHTML) > current) {
+            current = Number(ele[0][0].innerHTML);
+          }
+        }
+        // console.log(ele[0][0].innerHTML);
+        // current += Number(ele[0][0].innerHTML);
+      }
+
+      arr.push(current);
+    }
+    // - - - - - MIN - - - - -
+  } else if (name == 'Мин.') {
+
+    for(let elem of arrOtherFile){
+      let current;
+
+      for(let ele of elem){
+        if (current == undefined){
+          current = Number(ele[0][0].innerHTML);
+        } else {
+          if (Number(ele[0][0].innerHTML) < current) {
+            current = Number(ele[0][0].innerHTML);
+          }
+        }
+        // console.log(ele[0][0].innerHTML);
+        // current += Number(ele[0][0].innerHTML);
+      }
+
+      arr.push(current);
+    }
+    // - - - - - Конкат  - - - - -
+  } else if (name == 'Конкат') {
+
+    for(let elem of arrOtherFile){
+      let current;
+
+      for(let ele of elem){
+        if (current == undefined){
+          current = ele[0][0].innerHTML;
+        } else {
+          current += ele[0][0].innerHTML;
+        }
+
+      }
+
+      arr.push(current);
+    }
+
+  } else if (name == 'Критерий') {
+
+    for(let elem of arrOtherFile){
+      let current;
+
+      for(let ele of elem){
+        if (current == undefined){
+          current = ele[0][0].innerHTML;
+        }
+
+      }
+
+      arr.push(current);
+    }
+
+  }
+
+  return arr;
+
 }
