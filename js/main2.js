@@ -88,7 +88,20 @@ function getTableTr(groupSelects, trs) {
   }
   let arrResultGroup = [];
 
-  console.log(arr);
+  for(let elem in groupSelects) {
+    if (elem != '---'){
+      if(groupSelects[elem] != ''){
+
+        // let resultGroup = ;
+        arrResultGroup.push(getOtherTd(arr, groupSelects, elem, trs));
+
+      }
+    }
+  }
+
+  // console.log(arrResultGroup);
+
+  // getOtherTd(arr, groupSelects, trs);
 }
 // -----------------------------------------------------------------
 function getTd(tr, groupSelects, name) {
@@ -114,7 +127,7 @@ function chekDoubleIndex(indTr, arr, count){
   let countTRue = 0;
 
   if (!(arr.hasOwnProperty(count))) {
-    
+
     arr[count] = [];
     arr[count].push(indTr);
     return true;
@@ -138,24 +151,55 @@ function chekDoubleIndex(indTr, arr, count){
 
 }
 // --------------------------------------------------------------------
-// function getOtherTd(infoPathTr, groupSelects, elem) {
-//
-//   // const table = document.querySelector('table');
-//   // const trs = table.querySelectorAll('tr:not(.textAlign)');
-//
-//   let count = 0;
-//   let arrOtherFile = [];
-//
-//   for(let i = 0; i < infoPathTr.length; i++){
-//     arrOtherFile[i] = [];
-//     for (let j = 0; j < infoPathTr[i].length; j++){
-//       arrOtherFile[i][j] = [];
-//       arrOtherFile[i][j].push(getTd(trs[count], groupSelects, elem));
-//       count++;
-//     }
-//   }
-//   console.log(arrOtherFile);
-//   // let result = clearGroup(arrOtherFile, elem);
-//   // return result;
-// }
+function getOtherTd(arr, groupSelects, elem, trs) {
+
+    // console.log(arr, groupSelects);
+
+    let arrOtherFile = [];
+    let count = 0;
+
+    for(let i = 0; i < arr.length; i++){
+      arrOtherFile[i] = [];
+      for (let j = 0; j < arr[i].length; j++){
+        arrOtherFile[i][j] = [];
+        arrOtherFile[i][j].push(getTd(trs[count], groupSelects, elem));
+        count++;
+      }
+    }
+
+    // console.log(arrOtherFile, elem);
+    let str = clearGroup(arrOtherFile, elem);
+    console.log(str);
+
+    // return arrOtherFile;
+
+}
 // -----------------------------------------------------------------
+function clearGroup(arrOtherFile, elem) {
+  console.log(arrOtherFile, elem);
+  let arr = [];
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    arr[i] = [];
+  }
+  console.log(arr);
+
+  if (elem == 'Критерий'){
+
+    for(let i = 0; i < arrOtherFile.length; i++){
+      // arr[i] = [];
+      console.log(arrOtherFile[i][0][0]);
+
+
+      for(let j = 0; j < arrOtherFile[i][0][0].length; j++){
+        // console.log(arrOtherFile[i][j]);
+        console.log(j);
+        arr[j].push(arrOtherFile[i][0][0][j]);
+      }
+
+    }
+
+  }
+
+  return arr;
+
+}
