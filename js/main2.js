@@ -169,7 +169,7 @@ function getOtherTd(arr, groupSelects, elem, trs) {
 
     // console.log(arrOtherFile, elem);
     let str = clearGroup(arrOtherFile, elem);
-    console.log(str);
+    // console.log(str);
 
     // return arrOtherFile;
 
@@ -177,29 +177,109 @@ function getOtherTd(arr, groupSelects, elem, trs) {
 // -----------------------------------------------------------------
 function clearGroup(arrOtherFile, elem) {
   console.log(arrOtherFile, elem);
+
+  // = = = Критерий  = = =
+  if (elem == 'Критерий'){
+    let result = criterionGroup(arrOtherFile, elem);
+    console.log(result);
+    // = = = СУММА = = =
+  } else if (elem == 'Сумма'){
+    let result = summGroup(arrOtherFile, elem);
+    console.log(result);
+    // = = = Макс  = = =
+  } else if(elem == 'Макс.'){
+    let result = maxGroup(arrOtherFile, elem);
+    console.log(result);
+  }
+
+}
+// -----------------------------------------------------
+function criterionGroup(arrOtherFile, elem){
   let arr = [];
   for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
     arr[i] = [];
   }
-  console.log(arr);
 
-  if (elem == 'Критерий'){
+  for(let i = 0; i < arrOtherFile.length; i++){
 
-    for(let i = 0; i < arrOtherFile.length; i++){
-      // arr[i] = [];
-      console.log(arrOtherFile[i][0][0]);
+    for(let j = 0; j < arrOtherFile[i][0][0].length; j++){
 
-
-      for(let j = 0; j < arrOtherFile[i][0][0].length; j++){
-        // console.log(arrOtherFile[i][j]);
-        console.log(j);
-        arr[j].push(arrOtherFile[i][0][0][j]);
-      }
+      arr[j].push(arrOtherFile[i][0][0][j]);
 
     }
 
   }
-
   return arr;
+}
+// ----------------------------------------------------------------
+function summGroup(arrOtherFile, elem){
+  // let current = [];
+  let arr = [];
 
+  for(let i = 0; i < arrOtherFile.length; i++){
+    arr[i] = [];
+    // arr[i] = [];
+    // console.log(arrOtherFile[i]);
+
+    for(let j = 0; j < arrOtherFile[i].length; j++){
+      //
+      // console.log(arrOtherFile[i][j][0]);
+
+      for(let k = 0; k < arrOtherFile[i][j][0].length; k++){
+        // console.log(arrOtherFile[i][j][0][k].innerHTML);
+        arr[i].push(arrOtherFile[i][j][0][k]);
+      }
+    }
+
+  }
+  // console.log(arr);
+
+  let result = [];
+
+  let strLength = arrOtherFile[0][0][0].length;
+  // console.log(strLength);
+
+  if (strLength == 1){
+    for(let elem of arr){
+      let current = 0;
+
+      for(let ele of elem){
+        current += Number(ele.innerHTML);
+      }
+      result.push(current);
+      // console.log(elem);
+    }
+    return result;
+  } else {
+    return 'Больше 2 элементов надо доработать!';
+  }
+}
+// ---------------------------------------------------------
+function maxGroup(arrOtherFile, elem){
+  // console.log(arrOtherFile[0][0][0].length);
+  let result = [];
+  // let strA = [];
+
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let arr = [];
+    // console.log(arrOtherFile);
+    for(let j = 0; j < arrOtherFile.length; j++){
+      let num;
+      // console.log(arrOtherFile[j]);
+      arr[j] = [];
+      for(let l = 0; l < arrOtherFile[j].length; l++){
+        // console.log(arrOtherFile[j][l][0]);
+        if (num == undefined){
+          num = arrOtherFile[j][l][0][i];
+        } else {
+          if (Number(arrOtherFile[j][l][0][i].innerHTML) > Number(num.innerHTML)){
+            num = arrOtherFile[j][l][0][i];
+          }
+        }
+      }
+      arr[j].push(num);
+    }
+    result.push(arr);
+  }
+  return result;
 }
