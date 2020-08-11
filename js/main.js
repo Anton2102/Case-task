@@ -8,126 +8,15 @@ buttonStart.addEventListener('click', () => {
 
   // Получаем все select
   let selects = document.querySelectorAll('.select');
-  let tr = document.querySelectorAll('tr:not(.textAlign)');
+  let trs = document.querySelectorAll('tr:not(.textAlign)');
 
-  addClassTd(tr)
-  getSelect(selects);
+  addClassTd(trs);
+
+  let groupSelects = getSelect(selects);
+  getTableTr(groupSelects, trs);
 
 });
-
-// ----------------------------------------------
-// Получаем группы выбранных селектов
-function getSelect(selects){
-  // делим на логические группы
-  let groupSelects = {
-    '---': [],
-    'Критерий': [],
-    'Сумма': [],
-    'Макс.': [],
-    'Мин.': [],
-    'Конкат': []
-  };
-
-  // обходим все селекты, при совпадении
-  // значений, заносим их в логическую группу
-  for(let select of selects){
-
-    for(let optionSelected in groupSelects){
-      if (optionSelected == select.value) {
-
-        groupSelects[optionSelected].push(select.name);
-
-      }
-    }
-
-  }
-  if (groupSelects['---'].length == 5) {
-    return 0;
-  } else {
-
-    // Переходим у функции отбора критериев
-    getTableTr(groupSelects);
-
-  }
-
-}
-// ----------------------------------------------------------
-
-// ---------------------------------------------------------
-// ГРУППА РАЗБОРА ИНДЕКСОВ РЕЗУЛЬТИРУЮЩЕЙ ТАБЛИЦЫ
-function getTableTr(groupSelects) {
-
-  // получаем все строки по мимо заголовка
-  const table = document.querySelector('table');
-  const trs = table.querySelectorAll('tr:not(.textAlign)');
-
-  // массив и счетчик для группы "критерии"
-  let arr = [];
-  let infoPathTr = [];
-  let countInfoPathTr = 0;
-  let count = 0;
-
-  // обходим строки
-  for(let tr of trs){
-    // каждому тд присвоим своё логическое имя их селекта
-    let indTr = getTd(tr, groupSelects, 'Критерий');
-
-    // функция для разбора по группам
-    // если функция прибрала строку на место возращется true
-    let check = chekDoubleIndex(indTr, arr, count, infoPathTr, countInfoPathTr);
-
-    // если нет, то запускаем повторную обработку
-    if (check == undefined){
-      count++;
-      let check2 = chekDoubleIndex(indTr, arr, count, infoPathTr, countInfoPathTr);
-    }
-    countInfoPathTr++;
-  }
-  // через консоль ниже можно посмотреть результат обработки
-  // --->  console.log(arr); <---
-  let arrResultGroup = [];
-  // console.log(groupSelects);
-  for(let elem in groupSelects) {
-    if (elem != '---'){
-      if(groupSelects[elem] != ''){
-
-        let resultGroup = getOtherTd(infoPathTr, groupSelects, elem);
-        arrResultGroup.push(resultGroup);
-
-      }
-    }
-  }
-  console.log(arrResultGroup);
-}
-
-// -------------------------------------------------
-// ПОЛУЧЕНИЕ ВЫБРАННЫХ КРИТЕРИЕВ С КАЖДОЙ СТРОКИ
-function getTd(tr, groupSelects, name) {
-
-  // обходим все td из строки
-  let tds = tr.querySelectorAll('td');
-
-  let result = [];
-
-  // если class td совпадает с выбранным селектом
-  // то заносим его в новый масси
-  for (let td of tds) {
-    for (let sel of groupSelects[name]){
-      if (sel == td.classList.item(0)){
-        result.push(td);
-      }
-    }
-
-  }
-
-  // возращем получившийся массив
-  return result;
-
-}
-// ----------------------------------------------------
-
-// --------------------------------------------------------
-// ПОДПИСЫВАЕМ КАЖДЫЙ TD ИМЕНЕМ СТОЛБЦА
+// ----------------------------------------------------------------
 function addClassTd(trs){
 
   let tr = document.querySelectorAll('tr:not(.textAlign)');
@@ -135,7 +24,6 @@ function addClassTd(trs){
   for(let t of tr){
 
     let tds = t.querySelectorAll('td');
-    // console.log(tds);
 
     for(let i = 0; i < tds.length; i++){
       if (i === 0) {
@@ -153,19 +41,95 @@ function addClassTd(trs){
 
   }
 }
-// --------------------------------------------------------------
+// -----------------------------------------------------------------------
+function getSelect(selects){
 
+  let groupSelects = {
+    '---': [],
+    'Критерий': [],
+    'Сумма': [],
+    'Макс.': [],
+    'Мин.': [],
+    'Конкат': []
+  };
+
+  for(let select of selects){
+
+    for(let optionSelected in groupSelects){
+      if (optionSelected == select.value) {
+
+        groupSelects[optionSelected].push(select.name);
+
+      }
+    }
+
+  }
+
+  return groupSelects;
+
+}
 // ----------------------------------------------------------
-// ФУНКЦИЯ ПРОВЕРКИ НА ПОВТОРЕНИЯ ИНДЕКСОВ(КРИТЕРИЕВ)
-function chekDoubleIndex(indTr, arr, count, infoPathTr, countInfoPathTr){
+function getTableTr(groupSelects, trs) {
+
+  let arr = [];
+  let count = 0;
+
+  for(let tr of trs){
+
+    let indTr = getTd(tr, groupSelects, 'Критерий');
+
+    let check = chekDoubleIndex(indTr, arr, count);
+
+    if (check == undefined){
+      count++;
+      let check2 = chekDoubleIndex(indTr, arr, count);
+    }
+
+  }
+  let arrResultGroup = [];
+
+  for(let elem in groupSelects) {
+    if (elem != '---'){
+      if(groupSelects[elem] != ''){
+
+        // let resultGroup = ;
+        arrResultGroup.push(getOtherTd(arr, groupSelects, elem, trs));
+
+      }
+    }
+  }
+
+  // console.log(arrResultGroup);
+
+  // getOtherTd(arr, groupSelects, trs);
+}
+// -----------------------------------------------------------------
+function getTd(tr, groupSelects, name) {
+
+  let tds = tr.querySelectorAll('td');
+
+  let result = [];
+
+  for (let td of tds) {
+    for (let sel of groupSelects[name]){
+      if (sel == td.classList.item(0)){
+        result.push(td);
+      }
+    }
+
+  }
+
+  return result;
+
+}
+// ---------------------------------------------------------------
+function chekDoubleIndex(indTr, arr, count){
   let countTRue = 0;
 
   if (!(arr.hasOwnProperty(count))) {
-    arr[count] = [];
-    infoPathTr[count] = []
 
+    arr[count] = [];
     arr[count].push(indTr);
-    infoPathTr[count].push(countInfoPathTr);
     return true;
 
   } else {
@@ -180,136 +144,186 @@ function chekDoubleIndex(indTr, arr, count, infoPathTr, countInfoPathTr){
 
     if (countTRue == indTr.length){
       arr[count].push(indTr);
-      infoPathTr[count].push(countInfoPathTr);
       return true;
     }
 
   }
 
 }
-// --------------------------------------------------------------
+// --------------------------------------------------------------------
+function getOtherTd(arr, groupSelects, elem, trs) {
 
-// ------------------------------------------------------------------
-function getOtherTd(infoPathTr, groupSelects, elem) {
-  // console.log(elem);
-  const table = document.querySelector('table');
-  const trs = table.querySelectorAll('tr:not(.textAlign)');
+    // console.log(arr, groupSelects);
 
-  let count = 0;
-  let arrOtherFile = [];
-  // console.log(infoPathTr);
+    let arrOtherFile = [];
+    let count = 0;
 
-  for(let i = 0; i < infoPathTr.length; i++){
-    arrOtherFile[i] = [];
-    for (let j = 0; j < infoPathTr[i].length; j++){
-      arrOtherFile[i][j] = [];
-      arrOtherFile[i][j].push(getTd(trs[count], groupSelects, elem));
-      count++;
+    for(let i = 0; i < arr.length; i++){
+      arrOtherFile[i] = [];
+      for (let j = 0; j < arr[i].length; j++){
+        arrOtherFile[i][j] = [];
+        arrOtherFile[i][j].push(getTd(trs[count], groupSelects, elem));
+        count++;
+      }
     }
-  }
-  // for (let tr of trs){
-  //   let indTr = getTd(tr, groupSelects, 'Сумма');
-  //   // for(let elem)
-  //   // console.log(indTr);
-  // }
-  let result = clearGroup(arrOtherFile, elem);
-  return result;
-  // console.log(result);
+
+    // console.log(arrOtherFile, elem);
+    let str = clearGroup(arrOtherFile, elem);
+
 }
+// -----------------------------------------------------------------
+function clearGroup(arrOtherFile, elem) {
+  // console.log(arrOtherFile, elem);
 
-function clearGroup(arrOtherFile, name) {
-  // console.log(name);
+  // = = = Критерий  = = =
+  if (elem == 'Критерий'){
+    let result = criterionGroup(arrOtherFile, elem);
+    console.log(result);
+    // = = = СУММА = = =
+  } else if (elem == 'Сумма'){
+    let result = summGroup(arrOtherFile, elem);
+    console.log(result);
+    // = = = Макс  = = =
+  } else if(elem == 'Макс.'){
+    let result = maxGroup(arrOtherFile, elem);
+    console.log(result);
+  } else if (elem == 'Мин.'){
+    let result = minGroup(arrOtherFile, elem);
+    console.log(result);
+  } else if (elem == 'Конкат'){
+    let result = concatGroup(arrOtherFile, elem);
+    console.log(result);
+  }
+
+}
+// -----------------------------------------------------
+function criterionGroup(arrOtherFile, elem){
   let arr = [];
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    arr[i] = [];
+  }
 
-// - - - - - СУММА - - - - -
-  if (name == 'Сумма'){
+  for(let i = 0; i < arrOtherFile.length; i++){
 
-    for(let elem of arrOtherFile){
-      let current = 0;
+    for(let j = 0; j < arrOtherFile[i][0][0].length; j++){
 
-      for(let ele of elem){
-        // console.log(ele[0][0].innerHTML);
-        current += Number(ele[0][0].innerHTML);
-      }
+      arr[j].push(arrOtherFile[i][0][0][j]);
 
-      arr.push(current);
-    }
-
-    // - - - - - МАКС. - - - - -
-  } else if (name == 'Макс.') {
-
-    for(let elem of arrOtherFile){
-      let current;
-
-      for(let ele of elem){
-        if (current == undefined){
-          current = Number(ele[0][0].innerHTML);
-        } else {
-          if (Number(ele[0][0].innerHTML) > current) {
-            current = Number(ele[0][0].innerHTML);
-          }
-        }
-        // console.log(ele[0][0].innerHTML);
-        // current += Number(ele[0][0].innerHTML);
-      }
-
-      arr.push(current);
-    }
-    // - - - - - MIN - - - - -
-  } else if (name == 'Мин.') {
-
-    for(let elem of arrOtherFile){
-      let current;
-
-      for(let ele of elem){
-        if (current == undefined){
-          current = Number(ele[0][0].innerHTML);
-        } else {
-          if (Number(ele[0][0].innerHTML) < current) {
-            current = Number(ele[0][0].innerHTML);
-          }
-        }
-        // console.log(ele[0][0].innerHTML);
-        // current += Number(ele[0][0].innerHTML);
-      }
-
-      arr.push(current);
-    }
-    // - - - - - Конкат  - - - - -
-  } else if (name == 'Конкат') {
-
-    for(let elem of arrOtherFile){
-      let current;
-
-      for(let ele of elem){
-        if (current == undefined){
-          current = ele[0][0].innerHTML;
-        } else {
-          current += ele[0][0].innerHTML;
-        }
-
-      }
-
-      arr.push(current);
-    }
-
-  } else if (name == 'Критерий') {
-
-    for(let elem of arrOtherFile){
-      let current;
-
-      for(let ele of elem){
-        if (current == undefined){
-          current = ele[0][0].innerHTML;
-        }
-
-      }
-
-      arr.push(current);
     }
 
   }
-
   return arr;
+}
+// ----------------------------------------------------------------
+function summGroup(arrOtherFile, elem){
+  let result = [];
 
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let arr = [];
+
+    for(let j = 0; j < arrOtherFile.length; j++){
+      // console.log(arrOtherFile[j]);
+      let summ;
+      arr[j] = [];
+
+      for(let l = 0; l < arrOtherFile[j].length; l++){
+
+        if (summ == undefined){
+          summ = Number(arrOtherFile[j][l][0][i].innerHTML);
+        } else {
+
+          summ += Number(arrOtherFile[j][l][0][i].innerHTML);
+
+        }
+      }
+      arr[j].push(summ);
+    }
+    result.push(arr);
+  }
+  return result;
+}
+// ---------------------------------------------------------
+function maxGroup(arrOtherFile, elem){
+  // console.log(arrOtherFile[0][0][0].length);
+  let result = [];
+  // let strA = [];
+
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let arr = [];
+    // console.log(arrOtherFile);
+    for(let j = 0; j < arrOtherFile.length; j++){
+      let num;
+      // console.log(arrOtherFile[j]);
+      arr[j] = [];
+      for(let l = 0; l < arrOtherFile[j].length; l++){
+        // console.log(arrOtherFile[j][l][0]);
+        if (num == undefined){
+          num = arrOtherFile[j][l][0][i];
+        } else {
+          if (Number(arrOtherFile[j][l][0][i].innerHTML) > Number(num.innerHTML)){
+            num = arrOtherFile[j][l][0][i];
+          }
+        }
+      }
+      arr[j].push(num);
+    }
+    result.push(arr);
+  }
+  return result;
+}
+// -----------------------------------------------------------------------
+function minGroup(arrOtherFile, elem){
+  let result = [];
+
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let arr = [];
+
+    for(let j = 0; j < arrOtherFile.length; j++){
+      let num;
+      arr[j] = [];
+
+      for(let l = 0; l < arrOtherFile[j].length; l++){
+
+        if (num == undefined){
+          num = arrOtherFile[j][l][0][i];
+        } else {
+
+          if (Number(arrOtherFile[j][l][0][i].innerHTML) < Number(num.innerHTML)){
+            num = arrOtherFile[j][l][0][i];
+          }
+        }
+      }
+      arr[j].push(num);
+    }
+    result.push(arr);
+  }
+  return result;
+}
+// -----------------------------------------------------------------
+function concatGroup(arrOtherFile, elem){
+  let result = [];
+
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let arr = [];
+
+    for(let j = 0; j < arrOtherFile.length; j++){
+      // console.log(arrOtherFile[j]);
+      let str;
+      arr[j] = [];
+
+      for(let l = 0; l < arrOtherFile[j].length; l++){
+
+        if (str == undefined){
+          str = arrOtherFile[j][l][0][i].innerHTML;
+        } else {
+
+          str += '' + arrOtherFile[j][l][0][i].innerHTML;
+
+        }
+      }
+      arr[j].push(str);
+    }
+    result.push(arr);
+  }
+  return result;
 }
