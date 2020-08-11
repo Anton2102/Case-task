@@ -190,6 +190,9 @@ function clearGroup(arrOtherFile, elem) {
   } else if(elem == 'Макс.'){
     let result = maxGroup(arrOtherFile, elem);
     console.log(result);
+  } else if (elem == 'Мин.'){
+    let result = minGroup(arrOtherFile, elem);
+    console.log(result);
   }
 
 }
@@ -273,6 +276,34 @@ function maxGroup(arrOtherFile, elem){
           num = arrOtherFile[j][l][0][i];
         } else {
           if (Number(arrOtherFile[j][l][0][i].innerHTML) > Number(num.innerHTML)){
+            num = arrOtherFile[j][l][0][i];
+          }
+        }
+      }
+      arr[j].push(num);
+    }
+    result.push(arr);
+  }
+  return result;
+}
+// -----------------------------------------------------------------------
+function minGroup(arrOtherFile, elem){
+  let result = [];
+
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let arr = [];
+
+    for(let j = 0; j < arrOtherFile.length; j++){
+      let num;
+      arr[j] = [];
+
+      for(let l = 0; l < arrOtherFile[j].length; l++){
+
+        if (num == undefined){
+          num = arrOtherFile[j][l][0][i];
+        } else {
+
+          if (Number(arrOtherFile[j][l][0][i].innerHTML) < Number(num.innerHTML)){
             num = arrOtherFile[j][l][0][i];
           }
         }
