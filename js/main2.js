@@ -169,9 +169,6 @@ function getOtherTd(arr, groupSelects, elem, trs) {
 
     // console.log(arrOtherFile, elem);
     let str = clearGroup(arrOtherFile, elem);
-    // console.log(str);
-
-    // return arrOtherFile;
 
 }
 // -----------------------------------------------------------------
@@ -192,6 +189,9 @@ function clearGroup(arrOtherFile, elem) {
     console.log(result);
   } else if (elem == 'Мин.'){
     let result = minGroup(arrOtherFile, elem);
+    console.log(result);
+  } else if (elem == 'Конкат'){
+    let result = concatGroup(arrOtherFile, elem);
     console.log(result);
   }
 
@@ -309,6 +309,34 @@ function minGroup(arrOtherFile, elem){
         }
       }
       arr[j].push(num);
+    }
+    result.push(arr);
+  }
+  return result;
+}
+// -----------------------------------------------------------------
+function concatGroup(arrOtherFile, elem){
+  let result = [];
+
+  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let arr = [];
+
+    for(let j = 0; j < arrOtherFile.length; j++){
+      console.log(arrOtherFile[j]);
+      let str;
+      arr[j] = [];
+
+      for(let l = 0; l < arrOtherFile[j].length; l++){
+
+        if (str == undefined){
+          str = arrOtherFile[j][l][0][i].innerHTML;
+        } else {
+
+          str += '' + arrOtherFile[j][l][0][i].innerHTML;
+
+        }
+      }
+      arr[j].push(str);
     }
     result.push(arr);
   }
