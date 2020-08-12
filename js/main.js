@@ -99,8 +99,8 @@ function getTableTr(groupSelects, trs) {
     }
   }
 
-  // console.log(arrResultGroup);
-
+  let resultsTable = createTable(arrResultGroup);
+  console.log(resultsTable);
   // getOtherTd(arr, groupSelects, trs);
 }
 // -----------------------------------------------------------------
@@ -167,52 +167,54 @@ function getOtherTd(arr, groupSelects, elem, trs) {
       }
     }
 
-    // console.log(arrOtherFile, elem);
-    let str = clearGroup(arrOtherFile, elem);
+    return clearGroup(arrOtherFile, elem);
 
 }
 // -----------------------------------------------------------------
 function clearGroup(arrOtherFile, elem) {
-  // console.log(arrOtherFile, elem);
 
   // = = = Критерий  = = =
   if (elem == 'Критерий'){
-    let result = criterionGroup(arrOtherFile, elem);
-    console.log(result);
+    return criterionGroup(arrOtherFile, elem);
     // = = = СУММА = = =
   } else if (elem == 'Сумма'){
-    let result = summGroup(arrOtherFile, elem);
-    console.log(result);
+    return summGroup(arrOtherFile, elem);
     // = = = Макс  = = =
   } else if(elem == 'Макс.'){
-    let result = maxGroup(arrOtherFile, elem);
-    console.log(result);
+    return maxGroup(arrOtherFile, elem);
+    // = = = Макс. = = =
   } else if (elem == 'Мин.'){
-    let result = minGroup(arrOtherFile, elem);
-    console.log(result);
+    return minGroup(arrOtherFile, elem);
+    // = = = Конкат  = = =
   } else if (elem == 'Конкат'){
-    let result = concatGroup(arrOtherFile, elem);
-    console.log(result);
+    return concatGroup(arrOtherFile, elem);
   }
 
 }
 // -----------------------------------------------------
 function criterionGroup(arrOtherFile, elem){
-  let arr = [];
-  for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
-    arr[i] = [];
-  }
+    // console.log(arrOtherFile[0][0][0].length);
+    let result = [];
+    // let strA = [];
 
-  for(let i = 0; i < arrOtherFile.length; i++){
-
-    for(let j = 0; j < arrOtherFile[i][0][0].length; j++){
-
-      arr[j].push(arrOtherFile[i][0][0][j]);
-
+    for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+      let arr = [];
+      // console.log(arrOtherFile);
+      for(let j = 0; j < arrOtherFile.length; j++){
+        let index;
+        // console.log(arrOtherFile[j]);
+        arr[j] = [];
+        for(let l = 0; l < arrOtherFile[j].length; l++){
+          // console.log(arrOtherFile[j][l][0]);
+          if (index == undefined){
+            index = arrOtherFile[j][l][0][i];
+          }
+        }
+        arr[j].push(index);
+      }
+      result.push(arr);
     }
-
-  }
-  return arr;
+    return result;
 }
 // ----------------------------------------------------------------
 function summGroup(arrOtherFile, elem){
@@ -336,4 +338,39 @@ function concatGroup(arrOtherFile, elem){
   }
   // console.log(result);
   return result;
+}
+
+function createTable(arrResultGroup){
+
+  let table = document.createElement('table');
+
+  for(let group of arrResultGroup){
+    // console.log(group);
+    for(let subGroup of group){
+      let tr = document.createElement('tr');
+      // console.log('Создаю строку!');
+      // console.log(subGroup);
+      for(let i = 0; i < subGroup.length; i++){
+      // for(let elem of subGroup){
+        if (i == 0){
+          let tdHeader = document.createElement('td');
+          tdHeader.innerHTML = subGroup[i][0].classList.item(0);
+          tr.appendChild(tdHeader);
+        }
+
+        let nameClassTd = subGroup[i][0].classList.item(0);
+
+        let td = document.createElement('td');
+        td.innerHTML = subGroup[i][0].innerHTML;
+        td.classList.add(nameClassTd);
+
+        tr.appendChild(td);
+      }
+
+      table.appendChild(tr);
+    }
+  }
+
+  return table;
+
 }
