@@ -219,11 +219,14 @@ function summGroup(arrOtherFile, elem){
   let result = [];
 
   for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let nameClassList = arrOtherFile[0][0][0][i].classList.item(0);
     let arr = [];
 
     for(let j = 0; j < arrOtherFile.length; j++){
       // console.log(arrOtherFile[j]);
       let summ;
+      let td = document.createElement('td');
+      td.classList.add(nameClassList);
       arr[j] = [];
 
       for(let l = 0; l < arrOtherFile[j].length; l++){
@@ -236,7 +239,8 @@ function summGroup(arrOtherFile, elem){
 
         }
       }
-      arr[j].push(summ);
+      td.innerHTML = summ;
+      arr[j].push(td);
     }
     result.push(arr);
   }
@@ -302,13 +306,17 @@ function minGroup(arrOtherFile, elem){
 // -----------------------------------------------------------------
 function concatGroup(arrOtherFile, elem){
   let result = [];
+  // console.log(nameClassList);
 
   for(let i = 0; i < arrOtherFile[0][0][0].length; i++){
+    let nameClassList = arrOtherFile[0][0][0][i].classList.item(0);
     let arr = [];
 
     for(let j = 0; j < arrOtherFile.length; j++){
       // console.log(arrOtherFile[j]);
       let str;
+      let td = document.createElement('td');
+      td.classList.add(nameClassList);
       arr[j] = [];
 
       for(let l = 0; l < arrOtherFile[j].length; l++){
@@ -321,9 +329,11 @@ function concatGroup(arrOtherFile, elem){
 
         }
       }
-      arr[j].push(str);
+      td.innerHTML = str;
+      arr[j].push(td);
     }
     result.push(arr);
   }
+  // console.log(result);
   return result;
 }
