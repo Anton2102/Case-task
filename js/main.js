@@ -5,15 +5,21 @@ const buttonStart = document.querySelector('.buttonStart');
 
 // Навешиваем обработчик на нажатие кнопки
 buttonStart.addEventListener('click', () => {
+  let resultMap = document.querySelector('.resultMap');
+  resultMap.innerHTML = '';
 
   // Получаем все select
   let selects = document.querySelectorAll('.select');
   let trs = document.querySelectorAll('tr:not(.textAlign)');
 
+
   addClassTd(trs);
 
   let groupSelects = getSelect(selects);
-  getTableTr(groupSelects, trs);
+  let resultTable = getTableTr(groupSelects, trs);
+  let editResultTable = editTable(resultTable);
+
+  resultMap.appendChild(editResultTable);
 
 });
 // ----------------------------------------------------------------
@@ -99,9 +105,8 @@ function getTableTr(groupSelects, trs) {
     }
   }
 
-  let resultsTable = createTable(arrResultGroup);
-  console.log(resultsTable);
-  // getOtherTd(arr, groupSelects, trs);
+  return createTable(arrResultGroup);
+
 }
 // -----------------------------------------------------------------
 function getTd(tr, groupSelects, name) {
@@ -339,7 +344,7 @@ function concatGroup(arrOtherFile, elem){
   // console.log(result);
   return result;
 }
-
+// ------------------------------------------------------------
 function createTable(arrResultGroup){
 
   let table = document.createElement('table');
@@ -371,6 +376,30 @@ function createTable(arrResultGroup){
     }
   }
 
+  return table;
+
+}
+// -----------------------------------------------------------
+function editTable(resultTable){
+  let count = 0;
+
+  let tr = resultTable.rows;
+  let td = tr[0].cells;
+
+  let table = document.createElement('table');
+
+  for(let i = 0; i < tr[0].cells.length; i++){
+    let tr = document.createElement('tr');
+
+    for(let row of resultTable.rows){
+      let tds = row.cells;
+      let td = document.createElement('td');
+      td.innerHTML = tds[count].innerHTML;
+      tr.appendChild(td);
+    }
+    table.appendChild(tr);
+    count++;
+  }
   return table;
 
 }
