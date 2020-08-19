@@ -12,13 +12,17 @@ buttonStart.addEventListener('click', () => {
   let selects = document.querySelectorAll('.select');
   let trs = document.querySelectorAll('tr:not(.textAlign)');
 
-
+  // --> Добавляем tds клыссы
   addClassTd(trs);
 
+  // --> Делим selects по группам
   let groupSelects = getSelect(selects);
+  // --> Формируем и получаем группы строк
   let resultTable = getTableTr(groupSelects, trs);
+  // --> Преобразуем внешне таблицу(пересортровка)
   let editResultTable = editTable(resultTable);
 
+  // Размещаем нашу таблицу на странице
   resultMap.appendChild(editResultTable);
 
 });
@@ -31,6 +35,7 @@ function addClassTd(trs){
 
     let tds = t.querySelectorAll('td');
 
+    // По индексу присваеиваем каждой td className  по столбцу
     for(let i = 0; i < tds.length; i++){
       if (i === 0) {
         tds[i].classList.add('A');
@@ -50,6 +55,7 @@ function addClassTd(trs){
 // -----------------------------------------------------------------------
 function getSelect(selects){
 
+  // группы селектов
   let groupSelects = {
     '---': [],
     'Критерий': [],
@@ -64,6 +70,7 @@ function getSelect(selects){
     for(let optionSelected in groupSelects){
       if (optionSelected == select.value) {
 
+        // сверяем значение селектов с группой и знаносим совпадающие
         groupSelects[optionSelected].push(select.name);
 
       }

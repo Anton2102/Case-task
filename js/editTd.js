@@ -1,20 +1,19 @@
+// ----------------------------------------------
 let rows = document.querySelector('.firstTable').querySelectorAll('tr:not(.textAlign)');
 
-for(let row of rows){
+for(let row of rows) {
   let cells = row.querySelectorAll('td');
 
-  for(let td of cells){
-    // ----------------------------------------------
-    // console.log(td);
+  for(let td of cells) {
+
     td.addEventListener('click', startEditTd);
-    // ------------------------------------------------
 
   }
 
 }
+// ------------------------------------------------
 
 function startEditTd() {
-  // console.log(this);
   this.removeEventListener('click', startEditTd);
 
   let tdValue = this.innerHTML;
@@ -26,25 +25,22 @@ function startEditTd() {
   input.value = tdValue;
 
   this.appendChild(input);
-
   input.addEventListener('mouseout', endEditTd);
+
 }
+// -------------------------------------------------
 
 function endEditTd() {
-  // console.log(this);
   this.removeEventListener('mouseout', endEditTd);
 
   let valueInput = this.value;
-
   let td = document.createElement('td');
   td.innerHTML = valueInput;
 
   let parentInput = this.parentElement;
   let tr = parentInput.parentElement;
-  // console.log(tr);
-
-
-  // console.log(tr);
+  tr.replaceChild(td, parentInput);
 
   td.addEventListener('click', startEditTd);
 }
+// -----------------------------------------------
