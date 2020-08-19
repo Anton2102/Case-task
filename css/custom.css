@@ -15,6 +15,14 @@ table {
 }
 td {
   width: 100px;
+  height: 20px;
+}
+input {
+  width: 96px;
+  border: none;
+  height: 16px;
+  /* size: 40px; */
+  /* font-size: 15px; */
 }
 .textAlign {
   text-align: center;

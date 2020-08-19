@@ -360,6 +360,7 @@ function createTable(arrResultGroup){
         if (i == 0){
           let tdHeader = document.createElement('td');
           tdHeader.innerHTML = subGroup[i][0].classList.item(0);
+          // tdHeader.classList.add('textAlign')
           tr.appendChild(tdHeader);
         }
 
@@ -390,6 +391,9 @@ function editTable(resultTable){
 
   for(let i = 0; i < tr[0].cells.length; i++){
     let tr = document.createElement('tr');
+    if (i == 0){
+      tr.classList.add('textAlign');
+    }
 
     for(let row of resultTable.rows){
       let tds = row.cells;
